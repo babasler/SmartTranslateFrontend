@@ -1,0 +1,87 @@
+.translator-component {
+    display: flex;
+    flex-direction: row;
+    width: 85vb;
+    height: 55vh;
+    margin: 100;
+    margin-top: 4vh;
+    outline: 2.5px solid grey;
+    border-radius: 15px;
+}
+
+.source-part {
+    width: 50%;
+    height: 100%;
+}
+
+.target-part {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 100%;
+}
+
+.source-selector {
+    display: flex;
+    align-items: center;
+    height: 10%;
+    width: 100%;
+    gap: 50px;
+    background-color: lightgrey;
+    border-top-left-radius: 15px;
+    border-bottom: 2.5px solid grey;
+    border-right: 2.5px solid grey;
+}
+
+.target-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10%;
+    width: 100%;
+    background-color: lightgrey;
+    border-top-right-radius: 15px;
+    border-bottom: 2.5px solid grey;
+}
+
+.source-text {
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    width: 100%;
+    background-color: white;
+    border-right: 2.5px solid grey;
+}
+
+.target-text 
+{
+    height: 90%;
+    width: 100%;
+    background-color: white;
+    overflow: hidden;
+}
+
+.source-content {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    width: 100%;
+    padding: 0 1rem;
+}
+.target-content {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    width: 100%;
+    padding: 0 1rem;
+}
+.save-button {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1vh;
+}
+
+
+
+  
+  

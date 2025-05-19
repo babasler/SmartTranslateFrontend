@@ -1,0 +1,38 @@
+<div class="card">
+    <p-table [value]="favorites" [tableStyle]="{ 'min-width': '50rem' }">
+        <!-- Header Template -->
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Index</th>
+                <th>Favorit</th>
+                <th>Aktionen</th>
+            </tr>
+        </ng-template>
+
+        <!-- Body Template -->
+        <ng-template pTemplate="body" let-favorite let-i="rowIndex">
+            <tr>
+                <td>{{ i + 1 }}</td>
+                <td>
+                    <!-- Bearbeitungsmodus -->
+                    <div *ngIf="editingFavorite === favorite; else viewMode" class="edit-container">
+                        <input type="text" [(ngModel)]="editedText" style="height: 30px;" />
+                        <p-button icon="pi pi-check" severity="secondary" (click)="confirmEdit()"></p-button>
+                        <p-button icon="pi pi-times" severity="secondary" (click)="cancelEdit()"></p-button>
+                    </div>
+                    <!-- Anzeigemodus -->
+                    <ng-template #viewMode>
+                        {{ favorite.field }}
+                    </ng-template>
+                </td>
+                <td>
+                    <div style="display: flex; gap: .2rem;">
+                        <p-button icon="pi pi-times" severity="secondary" (onClick)="deleteFavorite(favorite)" />
+                        <p-button icon="pi pi-pencil" severity="secondary" (click)="startEditing(favorite)" />
+                        <p-button icon="pi pi-file-arrow-up" severity="secondary" (onClick)="translateFavorite(favorite)" />
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
