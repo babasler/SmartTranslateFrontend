@@ -6,6 +6,8 @@ import Aura from '@primeng/themes/aura';
 
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { authConfig } from './auth/auth.config';
+import { provideAuth } from 'angular-auth-oidc-client';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),provideAnimationsAsync(),
@@ -13,5 +15,5 @@ export const appConfig: ApplicationConfig = {
         theme: {
             preset: Aura
         }
-    }),provideHttpClient()]
+    }),provideHttpClient(), provideAuth(authConfig)]
 };

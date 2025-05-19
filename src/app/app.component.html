@@ -1,8 +1,18 @@
-<div class="app-header">
-    <i class="pi pi-language" style="font-size: 2rem"></i>
-    <label>SmartTranslate</label>
+<div *ngIf="isAuthenticated; else notLoggedIn">
+    <div class="app-header">
+        <i class="pi pi-language" style="font-size: 2rem"></i>
+        <label>SmartTranslate</label>
+    </div>
+    <div class="app">
+        <translator-component [setSourceTextFromFavorites]="selectedFavoriteText"></translator-component>
+        <favorites-component (favoriteToTranslate)="onFavoriteSelected($event)"></favorites-component>
+    </div>
+    <div class="app-footer">
+        <button (click)="logout()">Logout</button>
+    </div>
 </div>
-<div class="app">
-    <translator-component [setSourceTextFromFavorites]="selectedFavoriteText"></translator-component>
-    <favorites-component (favoriteToTranslate)="onFavoriteSelected($event)"></favorites-component>
-</div>
+
+<ng-template #notLoggedIn>
+    <h2>Benutzer ist nicht angemeldet</h2>
+    <button (click)="login()">Login</button>
+</ng-template>
