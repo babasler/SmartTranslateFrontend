@@ -37,6 +37,6 @@ export class AppComponent implements OnInit {
   logout(): void {
     sessionStorage.clear();
     window.location.href =
-      'https://eu-central-1gh9rdotof.auth.eu-central-1.amazoncognito.com/logout?client_id=34fiokko0g853qqd750osf419j&logout_uri=http://localhost:4200';
+      'https://eu-central-1gh9rdotof.auth.eu-central-1.amazoncognito.com/logout?client_id=34fiokko0g853qqd750osf419j&logout_uri=https://bastian-basler.de';
   }
 }
