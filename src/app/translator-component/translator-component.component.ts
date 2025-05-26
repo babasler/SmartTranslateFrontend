@@ -6,6 +6,7 @@ import { IftaLabelModule } from 'primeng/iftalabel';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { favorite } from '../models/favorite';
+import { translationService } from '../services/translate.service';
 
 interface language {
   name: string;
@@ -26,8 +27,9 @@ export class TranslatorComponentComponent implements OnInit, OnChanges {
   sourceText: string = '';
   targetText: string = '';
 
-  @Input() setSourceTextFromFavorites: favorite = { text: '', sourceLanguage: '', languageKey: '' };
+  @Input() setSourceTextFromFavorites: favorite = { id:'',text: '', sourceLanguage: '', languageKey: '' };
   @Output() addFavorite = new EventEmitter<favorite>();
+  constructor(private translationService: translationService) { }
 
   ngOnInit() {
     this.possibleLanguages = [
@@ -71,10 +73,11 @@ export class TranslatorComponentComponent implements OnInit, OnChanges {
     return this.sourceText.length > 0 && this.sourceLanguage.code.length > 0 && this.targetLanguage.code.length > 0;
   }
   translate(): void {
-    this.targetText = 'Hello World'; // TODO: Hier mit Restabfrage arbeiten
+    this.targetText = "hello world;"// TODO: Hier mit Restabfrage arbeiten
   }
   saveAsFavorite(): void {
     const newFavorite: favorite = {
+      id: '', // ID wird beim Hinzufügen nicht benötigt, wird vom Backend generiert
       text: this.sourceText,
       sourceLanguage: this.sourceLanguage.name,
       languageKey: this.sourceLanguage.code,

@@ -21,9 +21,9 @@ interface Column {
 })
 export class FavoritesComponentComponent implements OnChanges {
   @Output() favoriteToTranslate = new EventEmitter<favorite>();
-  @Input() newFavorite: favorite = { text: '', sourceLanguage: '', languageKey: '' };
+  @Input() newFavorite: favorite = { id: '',text: '', sourceLanguage: '', languageKey: '' };
   cols!: Column[];
-  favorites!: favorite[];
+  favorites: favorite[] = []; // Array für Favoriten
   editingFavorite: favorite | null = null; // Speichert den Favoriten, der bearbeitet wird
   editedText: string = ''; // Temporärer Text für die Bearbeitung
 
@@ -36,7 +36,7 @@ export class FavoritesComponentComponent implements OnChanges {
   }
 
   setNewFavoriteHandler(newFavorite: favorite): void {
-    this.addFavorite(newFavorite.text, newFavorite.sourceLanguage, newFavorite.languageKey);
+    this.addFavorite(newFavorite.id,newFavorite.text, newFavorite.sourceLanguage, newFavorite.languageKey);
   }
 
   ngOnInit() {
@@ -45,8 +45,8 @@ export class FavoritesComponentComponent implements OnChanges {
       { field: 'name', header: 'Name' },
     ];
     this.favoriteService.getfavorites().subscribe({
-      next: (result: { favorites: favorite[] }) => {
-        this.favorites = result.favorites;
+      next: (favorites: favorite[] ) => {
+        this.favorites = favorites;
         console.log('Favoriten erfolgreich abgerufen:', this.favorites);
       },
       error: err => {
@@ -73,16 +73,16 @@ export class FavoritesComponentComponent implements OnChanges {
     }
   }
 
-  addFavorite(field: string, sourceLanguage: string, languageKey: string) {
-    const newFavorite: favorite = { text: field, sourceLanguage: sourceLanguage, languageKey: languageKey };
+  addFavorite(id: string, field: string, sourceLanguage: string, languageKey: string) {
+    const newFavorite: favorite = {id:id, text: field, sourceLanguage: sourceLanguage, languageKey: languageKey };
     if (this.favorites.length >= 5 || this.isDuplicate(newFavorite)) {
       alert('You can only add 5 favorites');
       return;
     }
     this.favoriteService.addfavorite(newFavorite).subscribe({
-      next: (result: { favorite: favorite }) => {
-        this.favorites.push(newFavorite);
-        console.log('Favorit erfolgreich hinzugefügt:', result.favorite);
+      next: (favorite) => {
+        this.favorites.push(favorite);
+        console.log('Favorit erfolgreich hinzugefügt:', favorite);
       },
       error: err => {
         console.error('Fehler beim Hinzufügen des Favoriten:', err);
@@ -101,15 +101,16 @@ export class FavoritesComponentComponent implements OnChanges {
 
   confirmEdit(): void {
     if (this.editingFavorite) {
+      this.editingFavorite.text = this.editedText; // Aktualisiere den Favoriten
+      console.log('Aktualisiere Favorit:', this.editingFavorite);
       this.favoriteService.updatefavorite(this.editingFavorite).subscribe({
-        next: (result: { favorite: favorite }) => {
-          console.log('Favorit erfolgreich aktualisiert:', result.favorite);
+        next: (favorite) => {
+          console.log('Favorit erfolgreich aktualisiert:', favorite);
         },
         error: err => {
           console.error('Fehler beim Aktualisieren des Favoriten:', err);
         }
       });
-      this.editingFavorite.text = this.editedText; // Aktualisiere den Favoriten
       this.editingFavorite = null; // Beende den Bearbeitungsmodus
     }
   }
@@ -122,6 +123,4 @@ export class FavoritesComponentComponent implements OnChanges {
     return this.favorites.some(fav => fav.text === favorite.text && fav.sourceLanguage === favorite.sourceLanguage && fav.languageKey === favorite.languageKey);
   }
 
-
-  
 }

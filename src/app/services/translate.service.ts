@@ -4,13 +4,13 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { translation } from '../models/translation';
 
 @Injectable({ providedIn: 'root' })
-export class favoriteService {
+export class translationService {
   private readonly API_BASE_URL = '/api/translation'; // dein Backend
 
   constructor(private http: HttpClient) {}
-
-  translate(translation: translation): Observable<{ translation: translation }> {
-    return this.http.post<{ translation: translation }>(this.API_BASE_URL, { translation })
+  
+  translate(translation: translation): Observable<translation> {
+    return this.http.post<translation>(this.API_BASE_URL, { translation })
       .pipe(catchError(this.handleError));
   }
   private handleError(error: HttpErrorResponse) {
