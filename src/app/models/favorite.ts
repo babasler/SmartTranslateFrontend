@@ -1,5 +1,5 @@
 export interface favorite {
-    field: string;
-    language: string;
-    languageCode: string;
+    text: string;
+    languageKey: string;
+    sourceLanguage: string;
   }

@@ -26,7 +26,7 @@ export class TranslatorComponentComponent implements OnInit, OnChanges {
   sourceText: string = '';
   targetText: string = '';
 
-  @Input() setSourceTextFromFavorites: string[] = [];
+  @Input() setSourceTextFromFavorites: favorite = { text: '', sourceLanguage: '', languageKey: '' };
   @Output() addFavorite = new EventEmitter<favorite>();
 
   ngOnInit() {
@@ -35,8 +35,9 @@ export class TranslatorComponentComponent implements OnInit, OnChanges {
       { name: 'Englisch', code: 'en' },
       { name: 'Spanisch', code: 'es' },
       { name: 'Schwedisch', code: 's' },
-      { name: 'Französisch', code: 'fr' } // TODO: Hier mit Restabfrage arbeiten
+      { name: 'Französisch', code: 'fr' }      
     ];
+
   }
 
   ngOnChanges(): void {
@@ -54,9 +55,9 @@ export class TranslatorComponentComponent implements OnInit, OnChanges {
   }
 
   setSourceTextFromFavoritesHandler(): void {
-    if (this.setSourceTextFromFavorites && this.setSourceTextFromFavorites.length > 0) {
-      this.setSourceText(this.setSourceTextFromFavorites[0]); // Nutze das erste Element
-      this.setSourceLanguage({ name: this.setSourceTextFromFavorites[1], code: this.setSourceTextFromFavorites[2] });
+    if (this.setSourceTextFromFavorites ) {
+      this.setSourceText(this.setSourceTextFromFavorites.text); // Nutze das erste Element
+      this.setSourceLanguage({ name: this.setSourceTextFromFavorites.sourceLanguage, code: this.setSourceTextFromFavorites.languageKey });
     }
   }
   
@@ -74,9 +75,9 @@ export class TranslatorComponentComponent implements OnInit, OnChanges {
   }
   saveAsFavorite(): void {
     const newFavorite: favorite = {
-      field: this.sourceText,
-      language: this.sourceLanguage.name,
-      languageCode: this.sourceLanguage.code,
+      text: this.sourceText,
+      sourceLanguage: this.sourceLanguage.name,
+      languageKey: this.sourceLanguage.code,
     };
   
     this.addFavorite.emit(newFavorite); // Event auslösen

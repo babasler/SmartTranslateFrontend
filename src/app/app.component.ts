@@ -3,6 +3,7 @@ import { FavoritesComponentComponent } from "./favorites-component/favorites-com
 import { Component, OnInit, inject } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { CommonModule } from '@angular/common';
+import { favorite } from "./models/favorite";
 
 @Component({
   selector: 'app-root',
@@ -12,9 +13,9 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent implements OnInit {
   title = 'SmartTranslateFrontend';
-  selectedFavoriteText: string[] = [];
+  selectedFavoriteText: favorite = { text: '', sourceLanguage: '', languageKey: '' };
   
-  onFavoriteSelected(favorite: string[]): void {
+  onFavoriteSelected(favorite: favorite): void {
     this.selectedFavoriteText = favorite;
   }
   private readonly oidcSecurityService = inject(OidcSecurityService);
