@@ -14,6 +14,11 @@ import { favorite } from "./models/favorite";
 export class AppComponent implements OnInit {
   title = 'SmartTranslateFrontend';
   selectedFavoriteText: favorite = { text: '', sourceLanguage: '', languageKey: '' };
+  favoriteToAdd: favorite = { text: '', sourceLanguage: '', languageKey: '' };
+
+  onAddFavorite(favorite: favorite): void {
+    this.favoriteToAdd = { ...favorite }; // Triggert das Input-Binding
+  }
   
   onFavoriteSelected(favorite: favorite): void {
     this.selectedFavoriteText = favorite;

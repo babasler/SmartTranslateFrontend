@@ -22,7 +22,7 @@
                     </div>
                     <!-- Anzeigemodus -->
                     <ng-template #viewMode>
-                        {{ favorite.field }}
+                        {{ favorite.text }}
                     </ng-template>
                 </td>
                 <td>
@@ -35,7 +35,4 @@
             </tr>
         </ng-template>
     </p-table>
-</div>
-<div class="card">
-    <p-button label="Favoriten" icon="pi pi-plus" (click)="getFavorites()" />
 </div>

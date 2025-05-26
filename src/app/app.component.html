@@ -4,8 +4,14 @@
         <label>SmartTranslate</label>
     </div>
     <div class="app">
-        <translator-component [setSourceTextFromFavorites]="selectedFavoriteText"></translator-component>
-        <favorites-component (favoriteToTranslate)="onFavoriteSelected($event)"></favorites-component>
+        <translator-component
+            [setSourceTextFromFavorites]="selectedFavoriteText"
+            (addFavorite)="onAddFavorite($event)">
+        </translator-component>
+        <favorites-component
+            [newFavorite]="favoriteToAdd"
+            (favoriteToTranslate)="onFavoriteSelected($event)">
+        </favorites-component>
     </div>
     <div class="app-footer">
         <button (click)="logout()">Logout</button>

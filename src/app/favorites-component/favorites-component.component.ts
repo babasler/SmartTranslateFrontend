@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import { favorite } from '../models/favorite';
+import { favorite, favoriteDTO } from '../models/favorite';
 import { favoriteService } from '../services/favorite.service';
 
 interface Column {
@@ -19,14 +19,25 @@ interface Column {
   templateUrl: './favorites-component.component.html',
   styleUrl: './favorites-component.component.scss'
 })
-export class FavoritesComponentComponent {
+export class FavoritesComponentComponent implements OnChanges {
   @Output() favoriteToTranslate = new EventEmitter<favorite>();
+  @Input() newFavorite: favorite = { text: '', sourceLanguage: '', languageKey: '' };
   cols!: Column[];
   favorites!: favorite[];
   editingFavorite: favorite | null = null; // Speichert den Favoriten, der bearbeitet wird
   editedText: string = ''; // Temporärer Text für die Bearbeitung
 
   constructor(private favoriteService: favoriteService) { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['newFavorite'] && changes['newFavorite'].currentValue.text) {
+      this.setNewFavoriteHandler(changes['newFavorite'].currentValue);
+    }
+  }
+
+  setNewFavoriteHandler(newFavorite: favorite): void {
+    this.addFavorite(newFavorite.text, newFavorite.sourceLanguage, newFavorite.languageKey);
+  }
 
   ngOnInit() {
     this.cols = [
@@ -36,6 +47,7 @@ export class FavoritesComponentComponent {
     this.favoriteService.getfavorites().subscribe({
       next: (result: { favorites: favorite[] }) => {
         this.favorites = result.favorites;
+        console.log('Favoriten erfolgreich abgerufen:', this.favorites);
       },
       error: err => {
         console.error('Fehler beim Abrufen der Favoriten:', err);
@@ -43,6 +55,7 @@ export class FavoritesComponentComponent {
     });
 
   }
+
 
   deleteFavorite(favorite: favorite) {
     const index = this.favorites.findIndex(fav => fav === favorite);
@@ -109,14 +122,6 @@ export class FavoritesComponentComponent {
     return this.favorites.some(fav => fav.text === favorite.text && fav.sourceLanguage === favorite.sourceLanguage && fav.languageKey === favorite.languageKey);
   }
 
-  getFavorites():void  {
-    this.favoriteService.getfavorites().subscribe({
-      next: (result: { favorites: favorite[] }) => {
-        this.favorites = result.favorites;
-      },
-      error: err => {
-        console.error('Fehler beim Abrufen der Favoriten:', err);
-      }
-    });
-  }
+
+  
 }
