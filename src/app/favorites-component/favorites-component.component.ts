@@ -108,4 +108,15 @@ export class FavoritesComponentComponent {
   isDuplicate(favorite: favorite): boolean {
     return this.favorites.some(fav => fav.text === favorite.text && fav.sourceLanguage === favorite.sourceLanguage && fav.languageKey === favorite.languageKey);
   }
+
+  getFavorites():void  {
+    this.favoriteService.getfavorites().subscribe({
+      next: (result: { favorites: favorite[] }) => {
+        this.favorites = result.favorites;
+      },
+      error: err => {
+        console.error('Fehler beim Abrufen der Favoriten:', err);
+      }
+    });
+  }
 }
