@@ -24,7 +24,10 @@ export class favoriteService {
   addfavorite(favorite: favorite): Observable<{ favorite: favorite }> {
     const dto = this.favoriteToDTO(favorite);
     console.log('Adding favorite:', dto);
-    return this.http.post<{ favorite: favoriteDTO }>(this.API_BASE_URL, { favorite: dto })
+    return this.http.post<{ favorite: favoriteDTO }>(this.API_BASE_URL, { 
+      text: dto.text,
+      languageKey : dto.languageKey
+     })
       .pipe(
         map(result => ({ favorite: this.dtoToFavorite(result.favorite) })),
         catchError(this.handleError)
@@ -33,7 +36,10 @@ export class favoriteService {
 
   updatefavorite(favorite: favorite): Observable<{ favorite: favorite }> {
     const dto = this.favoriteToDTO(favorite);
-    return this.http.put<{ favorite: favoriteDTO }>(this.API_BASE_URL, { favorite: dto })
+    return this.http.put<{ favorite: favoriteDTO }>(this.API_BASE_URL,{ 
+      text: dto.text,
+      languageKey : dto.languageKey
+     })
       .pipe(
         map(result => ({ favorite: this.dtoToFavorite(result.favorite) })),
         catchError(this.handleError)
@@ -42,7 +48,10 @@ export class favoriteService {
 
   deletefavorite(favorite: favorite): Observable<{ favorite: favorite }> {
     const dto = this.favoriteToDTO(favorite);
-    return this.http.request<{ favorite: favoriteDTO }>('DELETE', this.API_BASE_URL, { body: { favorite: dto } })
+    return this.http.request<{ favorite: favoriteDTO }>('DELETE', this.API_BASE_URL, { body: { 
+      text: dto.text,
+      languageKey : dto.languageKey
+     } })
       .pipe(
         map(result => ({ favorite: this.dtoToFavorite(result.favorite) })),
         catchError(this.handleError)
