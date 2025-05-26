@@ -5,7 +5,7 @@ import { favorite } from '../models/favorite';
 
 @Injectable({ providedIn: 'root' })
 export class favoriteService {
-  private readonly API_BASE_URL = 'http://localhost:8080/'; // dein Backend
+  private readonly API_BASE_URL = 'http://backend:8080/favorites'; // dein Backend
 
   constructor(private http: HttpClient) {}
 
