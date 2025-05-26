@@ -22,10 +22,13 @@ export class AppComponent implements OnInit {
 
   userData$ = this.oidcSecurityService.userData$;
   isAuthenticated = false;
+  accessToken: string | null = null;
+
 
   ngOnInit(): void {
-    this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
+    this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, accessToken }) => {
       this.isAuthenticated = isAuthenticated;
+      this.accessToken = accessToken;
       console.log('Auth:', isAuthenticated);
     });
   }

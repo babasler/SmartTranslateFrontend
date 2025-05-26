@@ -5,9 +5,9 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { authConfig } from './auth/auth.config';
-import { provideAuth } from 'angular-auth-oidc-client';
+import { AuthInterceptor, provideAuth } from 'angular-auth-oidc-client';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),provideAnimationsAsync(),
@@ -15,5 +15,5 @@ export const appConfig: ApplicationConfig = {
         theme: {
             preset: Aura
         }
-    }),provideHttpClient(), provideAuth(authConfig)]
+    }),provideHttpClient(), provideAuth(authConfig), { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }]
 };
