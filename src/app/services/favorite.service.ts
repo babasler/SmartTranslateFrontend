@@ -23,10 +23,7 @@ export class favoriteService {
   addfavorite(favorite: favorite): Observable<favorite> {
     const dto = this.favoriteToDTO(favorite);
     console.log('Adding favorite:', dto);
-    return this.http.post<favoriteDTO>(this.API_BASE_URL, { 
-      text: dto.text,
-      languageKey : dto.languageKey
-     })
+    return this.http.post<favoriteDTO>(this.API_BASE_URL, dto)
       .pipe(
         map(result => (this.dtoToFavorite(result))),
         catchError(this.handleError)
@@ -68,7 +65,7 @@ export class favoriteService {
       console.log('Ungültiges favoriteDTO');
       return {id:'', text: '', languageKey: '', sourceLanguage: '' };
     }
-    console.log('Mapping favoriteDTO to favorite:', favoriteDTO.id, favoriteDTO.text, favoriteDTO.languageKey);
+    console.log('Mapping to favorite:', favoriteDTO.id, favoriteDTO.text, favoriteDTO.languageKey);
     return {
       id: favoriteDTO.id ,
       text: favoriteDTO.text,
