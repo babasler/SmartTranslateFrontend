@@ -7,14 +7,14 @@ import { favorite, favoriteDTO } from '../models/favorite';
 export class favoriteService {
   private readonly API_BASE_URL = '/api/favorites'; // dein Backend
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getfavorites(): Observable<favorite[]> {
     return this.http.get<favoriteDTO[]>(this.API_BASE_URL)
       .pipe(
         map(result => (result && Array.isArray(result)
-            ? result.map(dto => this.dtoToFavorite(dto))
-            : []
+          ? result.map(dto => this.dtoToFavorite(dto))
+          : []
         )),
         catchError(this.handleError)
       );
@@ -22,56 +22,60 @@ export class favoriteService {
 
   addfavorite(favorite: favorite): Observable<favorite> {
     const dto = this.favoriteToDTO(favorite);
-    console.log('Adding favorite:', dto);
-    return this.http.post<favoriteDTO>(this.API_BASE_URL, dto)
+    return this.http.post<favoriteDTO | favoriteDTO[]>(this.API_BASE_URL, dto)
       .pipe(
-        map(result => (this.dtoToFavorite(result))),
+        map(result => {
+          const dtoResult = Array.isArray(result) ? result[0] : result;
+          return this.dtoToFavorite(dtoResult);
+        }),
         catchError(this.handleError)
       );
   }
 
   updatefavorite(favorite: favorite): Observable<favorite> {
-    console.log('Updating favorite:', favorite);
     const dto = this.favoriteToDTO(favorite);
-    console.log('Updating dto:', dto);
-    return this.http.put<favoriteDTO>(this.API_BASE_URL,{
-      id: dto.id, // ID muss im DTO vorhanden sein 
+    return this.http.put<favoriteDTO | favoriteDTO[]>(this.API_BASE_URL, {
+      id: dto.id,
       text: dto.text,
-      languageKey : dto.languageKey
-     })
+      languageKey: dto.languageKey
+    })
       .pipe(
-        map(result => (this.dtoToFavorite(result))),
+        map(result => {
+          const dtoResult = Array.isArray(result) ? result[0] : result;
+          return this.dtoToFavorite(dtoResult);
+        }),
         catchError(this.handleError)
       );
   }
 
-  deletefavorite(favorite: favorite): Observable<favorite> {
-
+  deletefavorite(favorite: favorite): void {
     const dto = this.favoriteToDTO(favorite);
-    return this.http.request<favoriteDTO>('DELETE', this.API_BASE_URL, { body: { 
-      text: dto.text,
-      languageKey : dto.languageKey
-     } })
-      .pipe(
-        map(result => (this.dtoToFavorite(result))),
-        catchError(this.handleError)
-      );
+    console.log('Deleting favorite:', dto.id, dto.text, dto.languageKey);
+    this.http.delete(this.API_BASE_URL, {
+      body: {
+        id: dto.id,
+        text: dto.text,
+        languageKey: dto.languageKey
+      }
+    })
+    .pipe(
+      catchError(this.handleError)
+    )
+    .subscribe({
+      next: () => console.log('Delete request sent to backend'),
+      error: err => console.error('Fehler beim Löschen:', err)
+    });
   }
 
   // Mapping-Methoden
-  private dtoToFavorite(favoriteDTO:favoriteDTO): favorite {
-    // Passe das Mapping gf. an, falls sourceLanguage im DTO fehlt
-    if(favoriteDTO == null) {
-      console.log('Ungültiges favoriteDTO');
-      return {id:'', text: '', languageKey: '', sourceLanguage: '' };
-    }
+  private dtoToFavorite(favoriteDTO: favoriteDTO): favorite { 
     console.log('Mapping to favorite:', favoriteDTO.id, favoriteDTO.text, favoriteDTO.languageKey);
     return {
-      id: favoriteDTO.id ,
+      id: favoriteDTO.id, // oder eine echte ID, falls vorhanden
       text: favoriteDTO.text,
       languageKey: favoriteDTO.languageKey,
-      sourceLanguage: '' // oder aus DTO, falls vorhanden
-    };
+      sourceLanguage: this.getLangugageFromKey(favoriteDTO.languageKey) // Hier kannst du eine Standard-Sprache setzen oder anpassen 
+    }
   }
 
   private favoriteToDTO(fav: favorite): favoriteDTO {
@@ -93,6 +97,22 @@ export class favoriteService {
     return throwError(() => new Error(error.message || 'Unknown error'));
   }
 
-  
+  private getLangugageFromKey(languageKey: string): string {
+    // Hier kannst du eine Logik implementieren, um die Sprache aus dem languageKey zu extrahieren
+    // Zum Beispiel:
+    switch (languageKey) {
+      case 'en':
+        return 'Englisch';
+      case 'de':
+        return 'Deutsch';
+      case 'fr':
+        return 'Französisch';
+      case 'es':
+        return 'Spanisch';
+      case 's':
+        return 'Schwedisch';
+      default:
+        return 'Unknown Language'; // Standardwert, falls kein passender Key gefunden wird
+    }
+  }
 }
-

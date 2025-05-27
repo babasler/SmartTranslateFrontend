@@ -11,7 +11,6 @@ interface Column {
   header: string;
 }
 
-
 @Component({
   selector: 'favorites-component',
   imports: [TableModule, CommonModule, ButtonModule, FormsModule],
@@ -19,9 +18,10 @@ interface Column {
   templateUrl: './favorites-component.component.html',
   styleUrl: './favorites-component.component.scss'
 })
+
 export class FavoritesComponentComponent implements OnChanges {
   @Output() favoriteToTranslate = new EventEmitter<favorite>();
-  @Input() newFavorite: favorite = { id: '',text: '', sourceLanguage: '', languageKey: '' };
+  @Input() newFavorite: favorite = { id: '', text: '', sourceLanguage: '', languageKey: '' };
   cols!: Column[];
   favorites: favorite[] = []; // Array für Favoriten
   editingFavorite: favorite | null = null; // Speichert den Favoriten, der bearbeitet wird
@@ -36,7 +36,8 @@ export class FavoritesComponentComponent implements OnChanges {
   }
 
   setNewFavoriteHandler(newFavorite: favorite): void {
-    this.addFavorite(newFavorite.id,newFavorite.text, newFavorite.sourceLanguage, newFavorite.languageKey);
+    console.log('Neuer Favorit empfangen:', newFavorite);
+    this.addFavorite(newFavorite.id, newFavorite.text, newFavorite.sourceLanguage, newFavorite.languageKey);
   }
 
   ngOnInit() {
@@ -45,7 +46,7 @@ export class FavoritesComponentComponent implements OnChanges {
       { field: 'name', header: 'Name' },
     ];
     this.favoriteService.getfavorites().subscribe({
-      next: (favorites: favorite[] ) => {
+      next: (favorites: favorite[]) => {
         this.favorites = favorites;
         console.log('Favoriten erfolgreich abgerufen:', this.favorites);
       },
@@ -58,23 +59,19 @@ export class FavoritesComponentComponent implements OnChanges {
 
 
   deleteFavorite(favorite: favorite) {
-    const index = this.favorites.findIndex(fav => fav === favorite);
+    const index = this.favorites.findIndex(fav => fav.id === favorite.id);
     if (index !== -1) {
-      this.favoriteService.deletefavorite(favorite).subscribe({
-        next: () => {
-          this.favorites.splice(index, 1);
-          console.log('Favorit erfolgreich gelöscht:', favorite);
-        },
-        error: err => {
-          console.error('Fehler beim Löschen des Favoriten:', err);
-        }
-      });
-
+      this.favoriteService.deletefavorite(favorite)
+      this.favorites.splice(index, 1);
+      console.log('Favorit erfolgreich gelöscht:', favorite);
+    }
+    else {
+      console.error('Favorit nicht gefunden:', favorite);
     }
   }
 
   addFavorite(id: string, field: string, sourceLanguage: string, languageKey: string) {
-    const newFavorite: favorite = {id:id, text: field, sourceLanguage: sourceLanguage, languageKey: languageKey };
+    const newFavorite: favorite = { id: id, text: field, sourceLanguage: sourceLanguage, languageKey: languageKey };
     if (this.favorites.length >= 5 || this.isDuplicate(newFavorite)) {
       alert('You can only add 5 favorites');
       return;
