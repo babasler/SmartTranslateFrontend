@@ -11,9 +11,9 @@ export class translationService {
   
   translate(sourceText:string,sourceLanguageCode:string,targetLanguageCode:string): Observable<translation> {
     return this.http.post<translation>(this.API_BASE_URL, { 
-      sourceText: sourceText,
-      sourceLanguageCode: sourceLanguageCode,
-      targetLanguageCode: targetLanguageCode
+      text: sourceText,
+      languageKey: sourceLanguageCode,
+      targetLanguageKey: targetLanguageCode
      })
       .pipe(catchError(this.handleError));
   }
