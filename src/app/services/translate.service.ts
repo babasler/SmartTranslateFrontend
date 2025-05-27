@@ -9,8 +9,12 @@ export class translationService {
 
   constructor(private http: HttpClient) {}
   
-  translate(translation: translation): Observable<translation> {
-    return this.http.post<translation>(this.API_BASE_URL, { translation })
+  translate(sourceText:string,sourceLanguageCode:string,targetLanguageCode:string): Observable<translation> {
+    return this.http.post<translation>(this.API_BASE_URL, { 
+      sourceText: sourceText,
+      sourceLanguageCode: sourceLanguageCode,
+      targetLanguageCode: targetLanguageCode
+     })
       .pipe(catchError(this.handleError));
   }
   private handleError(error: HttpErrorResponse) {

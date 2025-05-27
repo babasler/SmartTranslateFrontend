@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { favorite } from '../models/favorite';
 import { translationService } from '../services/translate.service';
+import { translation } from '../models/translation';
 
 interface language {
   name: string;
@@ -73,7 +74,11 @@ export class TranslatorComponentComponent implements OnInit, OnChanges {
     return this.sourceText.length > 0 && this.sourceLanguage.code.length > 0 && this.targetLanguage.code.length > 0;
   }
   translate(): void {
-    this.targetText = "hello world;"// TODO: Hier mit Restabfrage arbeiten
+    this.translationService.translate(this.sourceText, this.sourceLanguage.code, this.targetLanguage.code)
+      .subscribe((result: translation) => {
+        // Assuming result has a property 'translatedText'
+        this.targetText = result.text;
+      });
   }
   saveAsFavorite(): void {
     const newFavorite: favorite = {
