@@ -74,6 +74,10 @@ export class TranslatorComponentComponent implements OnInit, OnChanges {
     return this.sourceText.length > 0 && this.sourceLanguage.code.length > 0 && this.targetLanguage.code.length > 0;
   }
   translate(): void {
+    if (!this.canTranslate()) {
+      return; // Übersetzung nur durchführen, wenn alle Bedingungen erfüllt sind
+    }
+    console.log('Übersetze:', this.sourceText, 'von', this.sourceLanguage.code, 'nach', this.targetLanguage.code);
     this.translationService.translate(this.sourceText, this.sourceLanguage.code, this.targetLanguage.code)
       .subscribe((result: translation) => {
         // Assuming result has a property 'translatedText'
