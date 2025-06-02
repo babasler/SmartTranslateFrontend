@@ -37,7 +37,7 @@ export class TranslatorComponentComponent implements OnInit, OnChanges {
       { name: 'Deutsch', code: 'de' },
       { name: 'Englisch', code: 'en' },
       { name: 'Spanisch', code: 'es' },
-      { name: 'Schwedisch', code: 's' },
+      { name: 'Schwedisch', code: 'se' },
       { name: 'Französisch', code: 'fr' }      
     ];
 
